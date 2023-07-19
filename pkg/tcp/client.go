@@ -3,6 +3,7 @@ package tcp
 import (
 	"guarde/pkg/utils"
 	"net"
+	"time"
 )
 
 func Request(addr string, body []byte) ([]byte, error) {
@@ -15,6 +16,10 @@ func Request(addr string, body []byte) ([]byte, error) {
 		return nil, err
 	}
 	defer utils.EnsureClosure(conn.Close)
+	err = conn.SetReadDeadline(time.Now().Add(3000 * time.Millisecond))
+	if err != nil {
+		return nil, err
+	}
 	_, err = conn.Write(body)
 	if err != nil {
 		return nil, err
