@@ -20,14 +20,22 @@ func main() {
 		log.Panic().Err(err).Msg("Failed to read configuration file.")
 	}
 	if config.Verbose {
+		log.Info().Msg("Verbose mode is enabled.")
 		log.Logger = logger.Logger().Level(zerolog.DebugLevel)
 	}
+	log.Info().Int("rulesets", len(config.Ruleset)).Msg("Loaded rulesets.")
 	if config.Proxy.Udp != nil {
 		log.Info().Msg("Starting proxy server for UDP.")
+		if config.Proxy.Udp.Fallback != nil {
+			log.Info().Int("fallbacks", len(config.Proxy.Udp.Fallback.Addresses)).Msg("Loaded UDP fallback addresses.")
+		}
 		go config.Proxy.Udp.LaunchUdp(config)
 	}
 	if config.Proxy.Tcp != nil {
 		log.Info().Msg("Starting proxy server for TCP.")
+		if config.Proxy.Tcp.Fallback != nil {
+			log.Info().Int("fallbacks", len(config.Proxy.Tcp.Fallback.Addresses)).Msg("Loaded TCP fallback addresses.")
+		}
 		go config.Proxy.Tcp.LaunchTcp(config)
 	}
 	select {}
