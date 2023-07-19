@@ -31,7 +31,7 @@ func (s *Client) OnTraffic(conn gnet.Conn) gnet.Action {
 	if !ip.IsLoopback() {
 		allow := s.config.IsAllowed(ip.String())
 		if !allow {
-			logger.Warn().Str("time", time.Since(start).String()).Msg("Not permitted address.")
+			logger.Warn().Str("lt", time.Since(start).String()).Msg("Not permitted address.")
 			return gnet.Close
 		}
 	}
@@ -56,6 +56,6 @@ func (s *Client) OnTraffic(conn gnet.Conn) gnet.Action {
 		log.Err(err).Msg("Failed to reply to client.")
 		return gnet.Close
 	}
-	logger.Info().Str("time", time.Since(start).String()).Msg("forwarded connection")
+	logger.Info().Str("lt", time.Since(start).String()).Msg("forwarded connection")
 	return gnet.None
 }
