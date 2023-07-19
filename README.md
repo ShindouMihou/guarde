@@ -31,12 +31,12 @@ proxy:
   udp:
     forward: 172.17.0.1:1053
     fallback:
-      addresses: [1.1.1.1]
+      addresses: ['1.1.1.1:53']
     port: 53
   tcp:
     forward: 172.17.0.1:1053
     fallback:
-      addresses: [1.1.1.1]
+      addresses: ['1.1.1.1:53']
     port: 53
 ruleset:
   - person: '%PLDT'
