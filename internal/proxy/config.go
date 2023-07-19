@@ -27,8 +27,13 @@ type Allow struct {
 }
 
 type Connection struct {
-	Forward string `yaml:"forward"`
-	Port    uint16 `yaml:"port"`
+	Forward  string    `yaml:"forward"`
+	Fallback *Fallback `yaml:"fallback"`
+	Port     uint16    `yaml:"port"`
+}
+
+type Fallback struct {
+	Addresses []string `yaml:"addresses"`
 }
 
 func New(dir string) (*Configuration, error) {

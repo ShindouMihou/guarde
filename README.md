@@ -18,6 +18,8 @@ Guarde has a very simple configuration:
   - `tcp`: contains all the tcp configuration details
     - `[udp/tcp].forward`: forwards all requests to the given port to this address.
     - `[udp/tcp].port`: the port that Guarde should listen on.
+    - `[udp/tcp].fallback`: additional configuration for when Guarde fails to request from initial forward.
+      - `addresses`: an array containing all the fallback addresses, this will be requested in synchronous until one replies.
   - `ruleset`: contains all the WHOIS rulesets that matter, please refer to [`Rulesets`](#rulesets).
   - `verbose`: whether to show all the request body and response body.
   - `allow`: configures the flexibility of the rulesets
@@ -28,9 +30,13 @@ An example of this configuration would be:
 proxy:
   udp:
     forward: 172.17.0.1:1053
+    fallback:
+      addresses: [1.1.1.1]
     port: 53
   tcp:
     forward: 172.17.0.1:1053
+    fallback:
+      addresses: [1.1.1.1]
     port: 53
 ruleset:
   - person: '%PLDT'

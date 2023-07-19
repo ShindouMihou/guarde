@@ -46,7 +46,24 @@ func (s *Client) OnTraffic(conn gnet.Conn) gnet.Action {
 	response, err := s.forwarder(s.connection.Forward, message)
 	if err != nil {
 		logger.Err(err).Msg("Failed to request from forward address.")
-		return gnet.Close
+		if s.connection.Fallback != nil {
+			ok := false
+			for _, fallback := range s.connection.Fallback.Addresses {
+				logger.Debug().Str("fb", fallback).Msg("Requesting from fallback address.")
+				response, err = s.forwarder(fallback, message)
+				if err != nil {
+					logger.Err(err).Str("fb", fallback).Msg("Failed to request from fallback address.")
+					continue
+				}
+				ok = true
+				break
+			}
+			if !ok {
+				return gnet.Close
+			}
+		} else {
+			return gnet.Close
+		}
 	}
 	if s.config.Verbose {
 		logger.Debug().Str("t", "qry").Msg(utils.Simplify(string(response)))
