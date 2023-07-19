@@ -21,21 +21,25 @@ func (config *Configuration) IsAllowed(ip string) bool {
 			for _, ruleset := range config.Ruleset {
 				for key, value := range ruleset {
 					key := strings.ToLower(key)
-					property, ok := properties[key]
+					matches, ok := properties[key]
 					if !ok {
 						log.Warn().Str("property", key).Str("ip", ip).Msg("Failed to get ruleset property.")
 						continue
 					}
-					if utils.HasPrefixStr(value, "%") {
-						if !strings.Contains(property, value[1:]) {
-							allow = false
+					localAllow := false
+					for _, property := range matches {
+						if utils.HasPrefixStr(value, "%") {
+							if strings.Contains(property, value[1:]) {
+								localAllow = true
+								break
+							}
+						}
+						if property == value {
+							localAllow = true
 							break
 						}
 					}
-					if property != value {
-						allow = false
-						break
-					}
+					allow = localAllow
 				}
 			}
 		} else {

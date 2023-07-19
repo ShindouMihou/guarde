@@ -2,8 +2,8 @@ package parser
 
 import "strings"
 
-func WhoIs(text string) map[string]string {
-	properties := make(map[string]string)
+func WhoIs(text string) map[string][]string {
+	properties := make(map[string][]string)
 	lines := strings.Split(text, "\n")
 	for _, line := range lines {
 		if !strings.Contains(line, ":") {
@@ -15,7 +15,12 @@ func WhoIs(text string) map[string]string {
 			continue
 		}
 		key = strings.ToLower(key)
-		properties[strings.TrimSpace(key)] = strings.TrimSpace(value)
+		key = strings.TrimSpace(key)
+		if _, ok := properties[key]; !ok {
+			properties[key] = []string{value}
+		} else {
+			properties[key] = append(properties[key], value)
+		}
 	}
 	return properties
 }
