@@ -21,10 +21,17 @@ func (config *Configuration) IsAllowed(ip string) bool {
 			for _, ruleset := range config.Ruleset {
 				for key, value := range ruleset {
 					key := strings.ToLower(key)
+					value := strings.ToLower(value)
+
 					matches, ok := properties[key]
 					if !ok {
 						log.Warn().Str("property", key).Str("ip", ip).Msg("Failed to get ruleset property.")
-						continue
+						if config.Allow.PropertyNotFound {
+							continue
+						} else {
+							allow = false
+							break
+						}
 					}
 					localAllow := false
 					for _, property := range matches {

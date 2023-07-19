@@ -12,6 +12,7 @@ type Configuration struct {
 	Ruleset []Rule `yaml:"ruleset"`
 	Timeout uint16 `yaml:"timeout"`
 	Verbose bool   `yaml:"verbose"`
+	Allow   Allow  `yaml:"allow"`
 }
 
 type Rule map[string]string
@@ -19,6 +20,10 @@ type Rule map[string]string
 type Proxy struct {
 	Udp *Connection `yaml:"udp,omitempty"`
 	Tcp *Connection `yaml:"tcp,omitempty"`
+}
+
+type Allow struct {
+	PropertyNotFound bool `yaml:"property_not_found"`
 }
 
 type Connection struct {

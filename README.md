@@ -20,6 +20,8 @@ Guarde has a very simple configuration:
     - `[udp/tcp].port`: the port that Guarde should listen on.
   - `ruleset`: contains all the WHOIS rulesets that matter, please refer to [`Rulesets`](#rulesets).
   - `verbose`: whether to show all the request body and response body.
+  - `allow`: configures the flexibility of the rulesets
+    - `property_not_found`: whether to allow when the ruleset cannot be found, default: `false`
 
 An example of this configuration would be:
 ```yaml
