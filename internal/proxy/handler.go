@@ -6,6 +6,7 @@ import (
 	"guarde/pkg/utils"
 	"net"
 	"strings"
+	"time"
 )
 
 type Client struct {
@@ -19,6 +20,7 @@ type Client struct {
 type Forwarder func(addr string, body []byte) ([]byte, error)
 
 func (s *Client) OnTraffic(conn gnet.Conn) gnet.Action {
+	start := time.Now()
 	logger := log.With().Str("mode", s.mode).Logger()
 	logger.Info().Str("addr", conn.RemoteAddr().String()).Msg("received connection")
 
@@ -29,7 +31,7 @@ func (s *Client) OnTraffic(conn gnet.Conn) gnet.Action {
 	if !ip.IsLoopback() {
 		allow := s.config.IsAllowed(ip.String())
 		if !allow {
-			logger.Warn().Msg("Not permitted address.")
+			logger.Warn().Str("time", time.Since(start).String()).Msg("Not permitted address.")
 			return gnet.Close
 		}
 	}
@@ -54,6 +56,6 @@ func (s *Client) OnTraffic(conn gnet.Conn) gnet.Action {
 		log.Err(err).Msg("Failed to reply to client.")
 		return gnet.Close
 	}
-	logger.Info().Msg("forwarded connection")
+	logger.Info().Str("time", time.Since(start).String()).Msg("forwarded connection")
 	return gnet.None
 }
