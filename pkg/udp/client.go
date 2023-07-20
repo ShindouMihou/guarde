@@ -18,11 +18,11 @@ func Request(addr string, body []byte) ([]byte, error) {
 		return nil, err
 	}
 	deadline := time.Now().Add(time.Duration(global.ReadDeadline.GetDefault(1024)) * time.Millisecond)
-	err = conn.SetReadDeadline(deadline)
+	_, err = conn.Write(body)
 	if err != nil {
 		return nil, err
 	}
-	_, err = conn.Write(body)
+	err = conn.SetReadDeadline(deadline)
 	if err != nil {
 		return nil, err
 	}

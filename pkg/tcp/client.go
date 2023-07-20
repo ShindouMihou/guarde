@@ -18,11 +18,11 @@ func Request(addr string, body []byte) ([]byte, error) {
 		return nil, err
 	}
 	defer utils.EnsureClosure(conn.Close)
-	err = conn.SetReadDeadline(time.Now().Add(time.Duration(global.ReadDeadline.GetDefault(1024)) * time.Millisecond))
+	_, err = conn.Write(body)
 	if err != nil {
 		return nil, err
 	}
-	_, err = conn.Write(body)
+	err = conn.SetReadDeadline(time.Now().Add(time.Duration(global.ReadDeadline.GetDefault(1024)) * time.Millisecond))
 	if err != nil {
 		return nil, err
 	}
