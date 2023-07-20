@@ -4,6 +4,7 @@ var Options = make(map[string]int)
 
 const (
 	ReadDeadline OptionKey = "read_deadline"
+	BufferSize   OptionKey = "buffer_size"
 )
 
 type OptionKey string

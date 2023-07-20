@@ -29,6 +29,10 @@ func main() {
 		log.Info().Int("len", len(config.Options)).Msg("Loaded additional options")
 		global.Options = config.Options
 	}
+	log.Info().
+		Int("buffer_size", global.BufferSize.GetDefault(1024)).
+		Int("read_deadline", global.ReadDeadline.GetDefault(1024)).
+		Msg("Loaded options")
 	log.Info().Int("rulesets", len(config.Ruleset)).Msg("Loaded rulesets.")
 	if config.Proxy.Udp != nil {
 		log.Info().Msg("Starting proxy server for UDP.")

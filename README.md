@@ -24,6 +24,9 @@ Guarde has a very simple configuration:
   - `verbose`: whether to show all the request body and response body.
   - `allow`: configures the flexibility of the rulesets
     - `property_not_found`: whether to allow when the ruleset cannot be found, default: `false`
+  - `options`: additional options that you can reconfigure especially if you find the defaults lacking.
+    - `read_deadline`: configures the maximum amount of time a read operation (from Guarde to forward/fallback) should take. default: 1280.
+    - `buffer_size`: configures the initial buffer size of each read operation. default: 1024.
 
 An example of this configuration would be:
 ```yaml

@@ -26,7 +26,7 @@ func Request(addr string, body []byte) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	response := make([]byte, 1024)
+	response := make([]byte, global.BufferSize.GetDefault(1024))
 	offset, _, err := conn.ReadFrom(response)
 	if err != nil {
 		return nil, err
