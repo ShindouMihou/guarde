@@ -57,7 +57,7 @@ func (avg *Average[T]) Add(value T) {
 			freeAmount = occupied - int(avg.limit)
 		}
 
-		avg.container = append(avg.container[:freeAmount], value)
+		avg.container = append(avg.container[freeAmount:], value)
 		avg.stale = avg.average()
 	})
 }
