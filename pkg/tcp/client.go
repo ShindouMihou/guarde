@@ -1,7 +1,9 @@
 package tcp
 
 import (
+	"guarde/internal/global"
 	"guarde/pkg/utils"
+	"io"
 	"net"
 	"time"
 )
@@ -16,7 +18,7 @@ func Request(addr string, body []byte) ([]byte, error) {
 		return nil, err
 	}
 	defer utils.EnsureClosure(conn.Close)
-	err = conn.SetReadDeadline(time.Now().Add(3000 * time.Millisecond))
+	err = conn.SetReadDeadline(time.Now().Add(time.Duration(global.ReadDeadline.GetDefault(1024)) * time.Millisecond))
 	if err != nil {
 		return nil, err
 	}
@@ -24,8 +26,7 @@ func Request(addr string, body []byte) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	response := make([]byte, 1024)
-	_, err = conn.Read(response)
+	response, err := io.ReadAll(conn)
 	if err != nil {
 		return nil, err
 	}

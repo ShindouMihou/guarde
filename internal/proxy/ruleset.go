@@ -4,6 +4,7 @@ import (
 	"github.com/likexian/whois"
 	"github.com/patrickmn/go-cache"
 	"github.com/rs/zerolog/log"
+	"guarde/internal/healthcheck"
 	"guarde/pkg/parser"
 	"guarde/pkg/utils"
 	"strings"
@@ -15,6 +16,7 @@ func (config *Configuration) IsAllowed(ip string) bool {
 		allow = cached.(bool)
 	} else {
 		log.Info().Str("ip", ip).Msg("Requesting WHOIS properties.")
+		healthcheck.WhoIsRequests.Increment()
 		scan, err := whois.Whois(ip)
 		if err == nil {
 			properties := parser.WhoIs(scan)

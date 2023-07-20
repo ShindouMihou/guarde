@@ -3,6 +3,8 @@ package main
 import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
+	"guarde/internal/global"
+	"guarde/internal/healthcheck"
 	"guarde/internal/proxy"
 	"guarde/pkg/fileutils"
 	"os"
@@ -23,6 +25,10 @@ func main() {
 		log.Info().Msg("Verbose mode is enabled.")
 		log.Logger = logger.Logger().Level(zerolog.DebugLevel)
 	}
+	if len(config.Options) > 0 {
+		log.Info().Int("len", len(config.Options)).Msg("Loaded additional options")
+		global.Options = config.Options
+	}
 	log.Info().Int("rulesets", len(config.Ruleset)).Msg("Loaded rulesets.")
 	if config.Proxy.Udp != nil {
 		log.Info().Msg("Starting proxy server for UDP.")
@@ -37,6 +43,10 @@ func main() {
 			log.Info().Int("fallbacks", len(config.Proxy.Tcp.Fallback.Addresses)).Msg("Loaded TCP fallback addresses.")
 		}
 		go config.Proxy.Tcp.LaunchTcp(config)
+	}
+	if config.Healthcheck != nil {
+		log.Info().Msg("Starting server for healthcheck.")
+		go healthcheck.Launch(config.Healthcheck.Port)
 	}
 	select {}
 }

@@ -1,7 +1,9 @@
 package udp
 
 import (
+	"guarde/internal/global"
 	"guarde/pkg/utils"
+	"io"
 	"net"
 	"time"
 )
@@ -15,7 +17,7 @@ func Request(addr string, body []byte) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	deadline := time.Now().Add(3000 * time.Millisecond)
+	deadline := time.Now().Add(time.Duration(global.ReadDeadline.GetDefault(1024)) * time.Millisecond)
 	err = conn.SetReadDeadline(deadline)
 	if err != nil {
 		return nil, err
@@ -25,10 +27,9 @@ func Request(addr string, body []byte) ([]byte, error) {
 		return nil, err
 	}
 	defer utils.EnsureClosure(conn.Close)
-	response := make([]byte, 1024)
-	offset, _, err := conn.ReadFrom(response)
+	response, err := io.ReadAll(conn)
 	if err != nil {
 		return nil, err
 	}
-	return response[:offset], nil
+	return response, nil
 }
