@@ -1,6 +1,7 @@
 package udp
 
 import (
+	"bytes"
 	"guarde/internal/global"
 	"guarde/pkg/utils"
 	"io"
@@ -27,9 +28,12 @@ func Request(addr string, body []byte) ([]byte, error) {
 		return nil, err
 	}
 	defer utils.EnsureClosure(conn.Close)
-	response, err := io.ReadAll(conn)
+	var buffer bytes.Buffer
+	size, err := io.Copy(&buffer, conn)
 	if err != nil {
 		return nil, err
 	}
-	return response, nil
+	resp := make([]byte, size)
+	copy(resp, buffer.Bytes())
+	return resp, nil
 }
