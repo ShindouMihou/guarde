@@ -23,6 +23,14 @@ func (avg *Average[T]) Stale() int {
 	return avg.stale
 }
 
+func (avg *Average[T]) Values() []T {
+	return utils.ReturningMutex(&avg.mutex, func() []T {
+		arr := make([]T, len(avg.container))
+		copy(arr, avg.container)
+		return arr
+	})
+}
+
 func (avg *Average[T]) average() int {
 	average := 0
 	for _, value := range avg.container {
