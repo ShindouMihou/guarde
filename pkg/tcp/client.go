@@ -22,7 +22,8 @@ func Request(addr string, body []byte) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	err = conn.SetReadDeadline(time.Now().Add(time.Duration(global.ReadDeadline.GetDefault(1024)) * time.Millisecond))
+	deadline := time.Now().Add(time.Duration(global.ReadDeadline.GetDefault(1024)+256) * time.Millisecond)
+	err = conn.SetReadDeadline(deadline)
 	if err != nil {
 		return nil, err
 	}
