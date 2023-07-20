@@ -3,7 +3,6 @@ package tcp
 import (
 	"guarde/internal/global"
 	"guarde/pkg/utils"
-	"io"
 	"net"
 	"time"
 )
@@ -27,9 +26,10 @@ func Request(addr string, body []byte) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	resp, err := io.ReadAll(conn)
+	response := make([]byte, 1024)
+	_, err = conn.Read(response)
 	if err != nil {
 		return nil, err
 	}
-	return resp, nil
+	return response, nil
 }
